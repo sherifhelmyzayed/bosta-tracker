@@ -40,7 +40,7 @@ const PackageHistory = () => {
                                 {translate("time", language)}
                             </Typography>
                         </TableCell>
-                        <TableCell align="right" p={0}>
+                        <TableCell align="right">
                             <Typography variant='tableHeader' component="h3" color="secondary.dark">
                                 {translate("details", language)}
                             </Typography>
