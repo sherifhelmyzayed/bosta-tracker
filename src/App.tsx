@@ -1,15 +1,8 @@
 import './App.css';
-import { createTheme, Grid, ThemeProvider, Typography } from '@mui/material';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { useSelector } from 'react-redux';
 
-import AddressInfo from './components/AddressInfo';
-import Header from './components/Header';
-import PackageInfo from './components/PackageInfo';
-import PackageHistory from './components/PackageHistory';
-import { grey, red, purple } from '@mui/material/colors';
-import { Container } from '@mui/system';
-import store from './store';
-import { fetchData } from './slices/dataSlice';
+import { grey, red, } from '@mui/material/colors';
 import TrackerLayouts from './components/TrackerLayouts';
 import DialogContainer from './components/DialogContainer';
 import { useState } from 'react';

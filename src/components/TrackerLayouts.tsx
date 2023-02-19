@@ -1,17 +1,15 @@
-import { createTheme, Grid, ThemeProvider, Typography, Container } from '@mui/material';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import { Grid, Typography, Container } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 import AddressInfo from './AddressInfo';
 import Header from './Header';
 import PackageInfo from './PackageInfo';
 import PackageHistory from './PackageHistory';
-import { fetchData } from '../slices/dataSlice';
 import translate from '../utils/translate';
 
 const TrackerLayouts = (props: { setModelOpen: any }) => {
 
     const language = useSelector(((state: any) => state.languageReducer))
-    
 
     return (
         <div dir={`${language.language === 'eng' ? 'ltr' : 'rtl'}`}>
