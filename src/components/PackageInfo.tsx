@@ -10,10 +10,12 @@ import { useSelector } from 'react-redux';
 import dateTimeParser from '../utils/dateParser';
 import translate from '../utils/translate';
 import stageDetect from '../utils/stageNum';
+import { useEffect, useState } from 'react';
 
 
 
 const PackageInfo = () => {
+    const [delStatus, setDelStatus] = useState("red")
 
     // detect language change
     const language = useSelector(((state: any) => state.languageReducer)).language
@@ -29,7 +31,11 @@ const PackageInfo = () => {
     const statusText = translate(data.CurrentStatus.state, language)
 
     // detect stage Number
-    const stageNum = stageDetect(data.CurrentStatus.state)
+    const stageNum = stageDetect(data.CurrentStatus.state);
+
+    // detect small screen fror style configurations
+    const theme = useTheme();
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
 
     const steps = [
@@ -38,6 +44,21 @@ const PackageInfo = () => {
         'Out for delivery',
         'Package delivered'
     ];
+
+    console.log(data.CurrentStatus.state);
+    
+    useEffect(() => {
+        if (data.CurrentStatus.state === "DELIVERED") {
+            setDelStatus("green")
+        } else if (data.CurrentStatus.state === "NOT_YET_SHIPPED") {
+            setDelStatus("yellow")
+        } else {
+            setDelStatus("red")
+        }
+    }, [])
+
+
+
 
     // change here from arabic to english
     const QontoConnector = styled(StepConnector)(({ theme }) => ({
@@ -49,12 +70,12 @@ const PackageInfo = () => {
         },
         [`&.${stepConnectorClasses.active}`]: {
             [`& .${stepConnectorClasses.line}`]: {
-                borderColor: theme.palette.primary.main,
+                borderColor: delStatus,
             },
         },
         [`&.${stepConnectorClasses.completed}`]: {
             [`& .${stepConnectorClasses.line}`]: {
-                borderColor: theme.palette.primary.main,
+                borderColor: delStatus,
             },
         },
         [`& .${stepConnectorClasses.line}`]: {
@@ -69,7 +90,7 @@ const PackageInfo = () => {
     }>(({ theme, ownerState }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? "rba(0,0,0,0)" : '#f8f8f8',
         zIndex: 1,
-        color: theme.palette.secondary.main,
+        color: "white",
         width: 50,
         height: 50,
         display: 'flex',
@@ -79,11 +100,11 @@ const PackageInfo = () => {
         borderColor: "#e8e8e8",
         alignItems: 'center',
         ...(ownerState.active && {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: delStatus,
             border: 'none'
         }),
         ...(ownerState.completed && {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: delStatus,
             width: 1,
             height: 1,
             padding: 10,
@@ -114,9 +135,7 @@ const PackageInfo = () => {
             </ColorlibStepIconRoot>
         );
     }
-    const theme = useTheme();
 
-    const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
 
 
@@ -134,12 +153,12 @@ const PackageInfo = () => {
                                 {data.TrackingNumber}
                             </Typography>
                         </Box>
-                        <Typography mt={2} variant='packageInfoDesc' component="h3" color="dark.main">
+                        <Typography mt={2} variant='packageInfoDesc' component="h3" sx={{color: delStatus}}>
                             {statusText}
                         </Typography>
                     </Grid>
 
-                    <Grid item xs={12} md={4} display="flex" alignItems={"start"} flexDirection="column"  mb={isSmall ? 3 : 0}>
+                    <Grid item xs={12} md={4} display="flex" alignItems={"start"} flexDirection="column" mb={isSmall ? 3 : 0}>
                         <Typography variant='packageDetailTitle' component="h3" color="secondary.dark">
                             {translate("Last update", language)}
                         </Typography>
@@ -156,7 +175,7 @@ const PackageInfo = () => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12} md={3} display="flex" alignItems={"start"} flexDirection="column"  mb={isSmall ? 3 : 0}>
+                    <Grid item xs={12} md={3} display="flex" alignItems={"start"} flexDirection="column" mb={isSmall ? 3 : 0}>
                         <Typography variant='packageDetailTitle' component="h3" color="secondary.dark">
                             {translate("Seller", language)}
                         </Typography>
@@ -165,7 +184,7 @@ const PackageInfo = () => {
                         </Typography>
                     </Grid>
 
-                    <Grid item xs={12} md={2} display="flex" alignItems={"start"} flexDirection="column"  mb={isSmall ? 3 : 0}>
+                    <Grid item xs={12} md={2} display="flex" alignItems={"start"} flexDirection="column" mb={isSmall ? 3 : 0}>
                         <Typography variant='packageDetailTitle' component="h3" color="secondary.dark">
                             {translate("Delivery Date", language)}
                         </Typography>
