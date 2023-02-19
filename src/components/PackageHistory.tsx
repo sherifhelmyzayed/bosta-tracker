@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     Table,
     TableBody,
@@ -6,48 +5,82 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Typography
 } from '@mui/material';
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-) {
-    return { name, calories, fat, carbs, protein };
-}
+import { useSelector } from 'react-redux';
+import dateTimeParser from '../utils/dateParser';
+import translate from '../utils/translate';
 
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0)
-];
+
 
 const PackageHistory = () => {
+    // detect language change
+    const language = useSelector(((state: any) => state.languageReducer)).language
+
+    // main data object
+    const data = useSelector((state: any) => state.dataReducer).data;
+
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="right">Branch</TableCell>
-                        <TableCell align="right">Date</TableCell>
-                        <TableCell align="right">Time</TableCell>
-                        <TableCell align="right">Details</TableCell>
+        <TableContainer >
+            <Table sx={{ minWidth: 50, width: '100%', border: "1px solid #e8e8e8", borderRadius: 50 }} aria-label="simple table">
+                <TableHead sx={{ backgroundColor: "#e1e1e1" }}>
+                    <TableRow >
+                        <TableCell align="right">
+                            <Typography variant='tableHeader' component="h3" color="secondary.dark">
+                                {translate("branch", language)}
+                            </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                            <Typography variant='tableHeader' component="h3" color="secondary.dark">
+                                {translate("date", language)}
+                            </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                            <Typography variant='tableHeader' component="h3" color="secondary.dark">
+                                {translate("time", language)}
+                            </Typography>
+                        </TableCell>
+                        <TableCell align="right" p={0}>
+                            <Typography variant='tableHeader' component="h3" color="secondary.dark">
+                                {translate("details", language)}
+                            </Typography>
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
-                        <TableRow
-                            key={row.name}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
-                            <TableCell align="right">{row.fat}</TableCell>
-                            <TableCell align="right">{row.carbs}</TableCell>
-                        </TableRow>
-                    ))}
+                    {
+                        data.TransitEvents.map((row: any, key: number) => {
+                            const lastUpdateTime = dateTimeParser(row.timestamp, language);
+                            return (
+                                <TableRow
+                                    key={key}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell align="right" component="th" scope="row" sx={{ p: 0 }}>
+                                        {translate("Nasr city", language)}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <Typography variant='tableRow' component="h3" color="dark.main">
+                                            {translate(lastUpdateTime.date, language)}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <Typography variant='tableRow' component="h3" color="dark.main">
+                                            {translate(lastUpdateTime.time, language)}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <Typography variant='tableRow' component="h3" color="dark.main">
+                                            {translate(row.state, language)}
+                                        </Typography>
+                                        <Typography mt={1} variant='tableRowDetail' component="h3" color="primary.main">
+                                            {translate(row.reason, language)}
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })
+                    }
                 </TableBody>
             </Table>
         </TableContainer>
